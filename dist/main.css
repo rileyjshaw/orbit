@@ -1,0 +1,34 @@
+body, p {
+  margin: 0; }
+
+body {
+  overflow: hidden;
+  text-transform: uppercase;
+  text-align: center;
+  background: #2858aa; }
+
+canvas, p {
+  position: absolute;
+  top: 50%;
+  left: 50%; }
+
+canvas {
+  -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%); }
+
+p {
+  font: 156px 'Lilita One', sans-serif;
+  color: #ef575b;
+  -webkit-transform: translate(-50%, -48%);
+      -ms-transform: translate(-50%, -48%);
+          transform: translate(-50%, -48%);
+  -webkit-transition: font-size 1s, opacity 1s;
+          transition: font-size 1s, opacity 1s; }
+
+.intro {
+  font-size: 60px; }
+
+.shrink {
+  opacity: 0;
+  font-size: 36px; }

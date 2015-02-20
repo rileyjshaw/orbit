@@ -1,0 +1,31 @@
+@import colors
+
+body, p
+  margin: 0
+
+body
+  overflow: hidden
+  text-transform: uppercase
+  text-align: center
+  background: $blue
+
+canvas, p
+  position: absolute
+  top: 50%
+  left: 50%
+
+canvas
+  transform: translate(-50%, -50%)
+
+p
+  font: 156px 'Lilita One', sans-serif
+  color: $red
+  transform: translate(-50%, -48%)
+  transition: font-size 1s, opacity 1s
+
+.intro
+  font-size: 60px
+
+.shrink
+  opacity: 0
+  font-size: 36px

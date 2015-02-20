@@ -59,7 +59,7 @@ function keyup (e) {
 }
 
 if (isMobile) {
-  dom.score.textContent = 'Touch to<br />start.';
+  dom.score.innerHTML = 'Touch to<br />start.';
   window.addEventListener('touchstart', trigger, false);
 } else {
   window.addEventListener('keydown', keydown, false);

@@ -1,3 +1,4 @@
+var isMobile = require('ismobilejs').any;
 var dom = require('./dom');
 var timer = require('./timer');
 var score = require('./score');
@@ -27,8 +28,8 @@ function done () {
   }, 1000);
 }
 
-function keydown (e) {
-  if (!spacePressed && e.keyCode === 32 && !blocked) {
+function trigger () {
+  if (!blocked) {
     if (paused) {
       paused = false;
       timer.start(done);
@@ -40,7 +41,12 @@ function keydown (e) {
         sounds.click.play();
       }
     }
+  }
+}
 
+function keydown (e) {
+  if (!spacePressed && e.keyCode === 32) {
+    trigger();
     spacePressed = true;
   }
 }
@@ -51,5 +57,10 @@ function keyup (e) {
   }
 }
 
-window.addEventListener('keydown', keydown, false);
-window.addEventListener('keyup', keyup, false);
+if (isMobile) {
+  dom.score.innerHTML = 'Touch to<br />start.';
+  window.addEventListener('touchstart', trigger, false);
+} else {
+  window.addEventListener('keydown', keydown, false);
+  window.addEventListener('keyup', keyup, false);
+}

@@ -1,4 +1,76 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+var canvas = document.getElementById('bg');
+var ctx = canvas.getContext('2d');
+var score = document.getElementById('score');
+
+module.exports = {
+  canvas: canvas,
+  ctx: ctx,
+  score: score,
+};
+
+},{}],2:[function(require,module,exports){
+var dom = require('./dom');
+
+var WIDTH = 540;
+var HEIGHT = 540;
+var RADIUS = Math.min(WIDTH, HEIGHT) * 0.4;
+var PI2 = Math.PI * 2;
+var PHASE_SHIFT = 0.125;
+var MARKER_ANGLE = 45;
+var MARKER_POS = Math.sin(PI2 / 360 * MARKER_ANGLE);
+var SHADOW_OFFSET = 12;
+var WHITE = '#dfdede';
+var RED = '#ef575b';
+var DARK_BLUE = '#0a1340';
+
+dom.canvas.width = WIDTH;
+dom.canvas.height = HEIGHT;
+
+dom.ctx.strokeStyle = DARK_BLUE;
+dom.ctx.lineWidth = 4;
+
+function draw (percentage) {
+  var shifted = percentage + PHASE_SHIFT;
+  var x = Math.cos(shifted * PI2);
+  var y = Math.sin(shifted * PI2);
+  var shadow = Array.apply(null, new Array(SHADOW_OFFSET));
+
+  // clear
+  dom.ctx.clearRect(0, 0, WIDTH, HEIGHT);
+
+  // draw line
+  dom.ctx.beginPath();
+  dom.ctx.arc(WIDTH / 2, HEIGHT / 2, RADIUS, 0, PI2);
+  dom.ctx.closePath();
+  dom.ctx.stroke();
+
+  // draw markers
+  dom.ctx.fillStyle = RED;
+  dom.ctx.beginPath();
+  dom.ctx.arc(WIDTH / 2 + RADIUS * MARKER_POS, HEIGHT / 2 + RADIUS * MARKER_POS, 6, 0, PI2);
+  dom.ctx.arc(WIDTH / 2 - RADIUS * MARKER_POS, HEIGHT / 2 - RADIUS * MARKER_POS, 6, 0, PI2);
+  dom.ctx.closePath();
+  dom.ctx.fill();
+
+  // draw circle
+  dom.ctx.fillStyle = WHITE;
+  dom.ctx.beginPath();
+  dom.ctx.arc(RADIUS * x + WIDTH / 2, RADIUS * y + HEIGHT / 2, 24, 0, PI2);
+  dom.ctx.closePath();
+  dom.ctx.fill();
+
+  // text shadow
+  dom.score.style.textShadow = shadow.map(function (_, i) {
+    return Math.round(-x * i) + 'px ' + Math.round(-y * i) + 'px ' + DARK_BLUE;
+  }).toString();
+}
+
+draw(0);
+
+module.exports = draw;
+
+},{"./dom":1}],3:[function(require,module,exports){
 var isMobile = require('ismobilejs').any;
 var dom = require('./dom');
 var timer = require('./timer');
@@ -66,79 +138,7 @@ if (isMobile) {
   window.addEventListener('keyup', keyup, false);
 }
 
-},{"./dom":2,"./score":4,"./sounds":5,"./timer":6,"ismobilejs":8}],2:[function(require,module,exports){
-var canvas = document.getElementById('bg');
-var ctx = canvas.getContext('2d');
-var score = document.getElementById('score');
-
-module.exports = {
-  canvas: canvas,
-  ctx: ctx,
-  score: score,
-};
-
-},{}],3:[function(require,module,exports){
-var dom = require('./dom');
-
-var WIDTH = 540;
-var HEIGHT = 540;
-var RADIUS = Math.min(WIDTH, HEIGHT) * 0.4;
-var PI2 = Math.PI * 2;
-var PHASE_SHIFT = 0.125;
-var MARKER_ANGLE = 45;
-var MARKER_POS = Math.sin(PI2 / 360 * MARKER_ANGLE);
-var SHADOW_OFFSET = 12;
-var WHITE = '#dfdede';
-var RED = '#ef575b';
-var DARK_BLUE = '#0a1340';
-
-dom.canvas.width = WIDTH;
-dom.canvas.height = HEIGHT;
-
-dom.ctx.strokeStyle = DARK_BLUE;
-dom.ctx.lineWidth = 4;
-
-function draw (percentage) {
-  var shifted = percentage + PHASE_SHIFT;
-  var x = Math.cos(shifted * PI2);
-  var y = Math.sin(shifted * PI2);
-  var shadow = Array.apply(null, new Array(SHADOW_OFFSET));
-
-  // clear
-  dom.ctx.clearRect(0, 0, WIDTH, HEIGHT);
-
-  // draw line
-  dom.ctx.beginPath();
-  dom.ctx.arc(WIDTH / 2, HEIGHT / 2, RADIUS, 0, PI2);
-  dom.ctx.closePath();
-  dom.ctx.stroke();
-
-  // draw markers
-  dom.ctx.fillStyle = RED;
-  dom.ctx.beginPath();
-  dom.ctx.arc(WIDTH / 2 + RADIUS * MARKER_POS, HEIGHT / 2 + RADIUS * MARKER_POS, 6, 0, PI2);
-  dom.ctx.arc(WIDTH / 2 - RADIUS * MARKER_POS, HEIGHT / 2 - RADIUS * MARKER_POS, 6, 0, PI2);
-  dom.ctx.closePath();
-  dom.ctx.fill();
-
-  // draw circle
-  dom.ctx.fillStyle = WHITE;
-  dom.ctx.beginPath();
-  dom.ctx.arc(RADIUS * x + WIDTH / 2, RADIUS * y + HEIGHT / 2, 24, 0, PI2);
-  dom.ctx.closePath();
-  dom.ctx.fill();
-
-  // text shadow
-  dom.score.style.textShadow = shadow.map(function (_, i) {
-    return Math.round(-x * i) + 'px ' + Math.round(-y * i) + 'px ' + DARK_BLUE;
-  }).toString();
-}
-
-draw(0);
-
-module.exports = draw;
-
-},{"./dom":2}],4:[function(require,module,exports){
+},{"./dom":1,"./score":4,"./sounds":5,"./timer":6,"ismobilejs":8}],4:[function(require,module,exports){
 var dom = require('./dom');
 
 var exports = {
@@ -151,7 +151,7 @@ exports.inc = function incScore () {
 
 module.exports = exports;
 
-},{"./dom":2}],5:[function(require,module,exports){
+},{"./dom":1}],5:[function(require,module,exports){
 var Howl = require('howler').Howl;
 var names = ['click'];
 var extensions = ['mp3', 'ogg', 'wav'];
@@ -221,12 +221,12 @@ module.exports = {
   start: timerStart
 };
 
-},{"./draw":3}],7:[function(require,module,exports){
+},{"./draw":2}],7:[function(require,module,exports){
 /*!
- *  howler.js v1.1.25
+ *  howler.js v1.1.28
  *  howlerjs.com
  *
- *  (c) 2013-2014, James Simpson of GoldFire Studios
+ *  (c) 2013-2015, James Simpson of GoldFire Studios
  *  goldfirestudios.com
  *
  *  MIT License
@@ -411,13 +411,13 @@ module.exports = {
             self.iOSAutoEnable = false;
 
             // remove the touch start listener
-            window.removeEventListener('touchstart', unlock, false);
+            window.removeEventListener('touchend', unlock, false);
           }
         }, 0);
       };
 
       // setup a touch start listener to attempt an unlock in
-      window.addEventListener('touchstart', unlock, false);
+      window.addEventListener('touchend', unlock, false);
 
       return self;
     }
@@ -725,9 +725,9 @@ module.exports = {
           node.gain.value = self._volume;
 
           if (typeof node.bufferSource.start === 'undefined') {
-            node.bufferSource.noteGrainOn(0, pos, duration);
+            loop ? node.bufferSource.noteGrainOn(0, pos, 86400) : node.bufferSource.noteGrainOn(0, pos, duration);
           } else {
-            node.bufferSource.start(0, pos, duration);
+            loop ? node.bufferSource.start(0, pos, 86400) : node.bufferSource.start(0, pos, duration);
           }
         } else {
           if (node.readyState === 4 || !node.readyState && navigator.isCocoonJS) {
@@ -1578,7 +1578,7 @@ module.exports = {
 
 },{}],8:[function(require,module,exports){
 /**
- * isMobile.js v0.3.5
+ * isMobile.js v0.3.9
  *
  * A simple library to detect Apple phones and tablets,
  * Android phones and tablets, other mobile devices (like blackberry, mini-opera and windows phone),
@@ -1595,11 +1595,14 @@ module.exports = {
         apple_tablet        = /iPad/i,
         android_phone       = /(?=.*\bAndroid\b)(?=.*\bMobile\b)/i, // Match 'Android' AND 'Mobile'
         android_tablet      = /Android/i,
+        amazon_phone        = /(?=.*\bAndroid\b)(?=.*\bSD4930UR\b)/i,
+        amazon_tablet       = /(?=.*\bAndroid\b)(?=.*\b(?:KFOT|KFTT|KFJWI|KFJWA|KFSOWI|KFTHWI|KFTHWA|KFAPWI|KFAPWA|KFARWI|KFASWI|KFSAWI|KFSAWA)\b)/i,
         windows_phone       = /IEMobile/i,
         windows_tablet      = /(?=.*\bWindows\b)(?=.*\bARM\b)/i, // Match 'Windows' AND 'ARM'
         other_blackberry    = /BlackBerry/i,
         other_blackberry_10 = /BB10/i,
         other_opera         = /Opera Mini/i,
+        other_chrome        = /(CriOS|Chrome)(?=.*\bMobile\b)/i,
         other_firefox       = /(?=.*\bFirefox\b)(?=.*\bMobile\b)/i, // Match 'Firefox' AND 'Mobile'
         seven_inch = new RegExp(
             '(?:' +         // Non-capturing group
@@ -1632,17 +1635,28 @@ module.exports = {
 
     var IsMobileClass = function(userAgent) {
         var ua = userAgent || navigator.userAgent;
+        // Facebook mobile app's integrated browser adds a bunch of strings that
+        // match everything. Strip it out if it exists.
+        var tmp = ua.split('[FBAN');
+        if (typeof tmp[1] !== 'undefined') {
+            ua = tmp[0];
+        }
 
         this.apple = {
             phone:  match(apple_phone, ua),
             ipod:   match(apple_ipod, ua),
-            tablet: match(apple_tablet, ua),
+            tablet: !match(apple_phone, ua) && match(apple_tablet, ua),
             device: match(apple_phone, ua) || match(apple_ipod, ua) || match(apple_tablet, ua)
         };
+        this.amazon = {
+            phone:  match(amazon_phone, ua),
+            tablet: !match(amazon_phone, ua) && match(amazon_tablet, ua),
+            device: match(amazon_phone, ua) || match(amazon_tablet, ua)
+        };
         this.android = {
-            phone:  match(android_phone, ua),
-            tablet: !match(android_phone, ua) && match(android_tablet, ua),
-            device: match(android_phone, ua) || match(android_tablet, ua)
+            phone:  match(amazon_phone, ua) || match(android_phone, ua),
+            tablet: !match(amazon_phone, ua) && !match(android_phone, ua) && (match(amazon_tablet, ua) || match(android_tablet, ua)),
+            device: match(amazon_phone, ua) || match(amazon_tablet, ua) || match(android_phone, ua) || match(android_tablet, ua)
         };
         this.windows = {
             phone:  match(windows_phone, ua),
@@ -1654,7 +1668,8 @@ module.exports = {
             blackberry10: match(other_blackberry_10, ua),
             opera:        match(other_opera, ua),
             firefox:      match(other_firefox, ua),
-            device:       match(other_blackberry, ua) || match(other_blackberry_10, ua) || match(other_opera, ua) || match(other_firefox, ua)
+            chrome:       match(other_chrome, ua),
+            device:       match(other_blackberry, ua) || match(other_blackberry_10, ua) || match(other_opera, ua) || match(other_firefox, ua) || match(other_chrome, ua)
         };
         this.seven_inch = match(seven_inch, ua);
         this.any = this.apple.device || this.android.device || this.windows.device || this.other.device || this.seven_inch;
@@ -1682,11 +1697,11 @@ module.exports = {
         module.exports = instantiate();
     } else if (typeof define === 'function' && define.amd) {
         //AMD
-        define(global.isMobile = instantiate());
+        define('isMobile', [], global.isMobile = instantiate());
     } else {
         global.isMobile = instantiate();
     }
 
 })(this);
 
-},{}]},{},[1]);
+},{}]},{},[3]);

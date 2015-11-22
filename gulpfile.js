@@ -48,8 +48,8 @@ gulp.task('watch', function () {
 });
 
 gulp.task('deploy', function () {
-  gulp.src(paths.dist + '/*.*')
-    .pipe($.ghPages('https://github.com/rileyjshaw/orbit.git', 'origin'));
+  return gulp.src(paths.dist + '/*.*')
+    .pipe($.ghPages());
 });
 
 gulp.task('webserver', function () {

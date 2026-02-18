@@ -82,61 +82,61 @@ var spacePressed = false;
 var blocked = false;
 var paused = true;
 
-function done() {
-	var val = score.val;
-	var highScore = parseInt(localStorage.getItem('highScore'));
+function done () {
+  var val = score.val;
+  var highScore = parseInt(localStorage.getItem('highScore'));
 
-	paused = blocked = true;
-	dom.score.className = 'shrink';
+  paused = blocked = true;
+  dom.score.className = 'shrink';
 
-	if (val > highScore || !highScore) {
-		localStorage.setItem('highScore', val);
-		highScore = val;
-	}
+  if (val > highScore || !highScore) {
+    localStorage.setItem('highScore', val);
+    highScore = val;
+  }
 
-	setTimeout(function () {
-		dom.score.innerHTML = 'Score: ' + val + '<br />Best: ' + highScore;
-		dom.score.className = 'intro';
-		blocked = false;
-		score.val = 0;
-	}, 1000);
+  setTimeout(function () {
+    dom.score.innerHTML = 'Score: ' + val + '<br />Best: ' + highScore;
+    dom.score.className = 'intro';
+    blocked = false;
+    score.val = 0;
+  }, 1000);
 }
 
-function trigger() {
-	if (!blocked) {
-		if (paused) {
-			paused = false;
-			timer.start(done);
-			dom.score.className = '';
-			score.inc();
-		} else {
-			if (timer.lap()) {
-				score.inc();
-				sounds.click.play();
-			}
-		}
-	}
+function trigger () {
+  if (!blocked) {
+    if (paused) {
+      paused = false;
+      timer.start(done);
+      dom.score.className = '';
+      score.inc();
+    } else {
+      if (timer.lap()) {
+        score.inc();
+        sounds.click.play();
+      }
+    }
+  }
 }
 
-function keydown(e) {
-	if (!spacePressed && e.keyCode === 32) {
-		trigger();
-		spacePressed = true;
-	}
+function keydown (e) {
+  if (!spacePressed && e.keyCode === 32) {
+    trigger();
+    spacePressed = true;
+  }
 }
 
-function keyup(e) {
-	if (spacePressed && e.keyCode === 32) {
-		spacePressed = false;
-	}
+function keyup (e) {
+  if (spacePressed && e.keyCode === 32) {
+    spacePressed = false;
+  }
 }
 
 if (isMobile) {
-	dom.score.innerHTML = 'Touch to<br />start.';
-	window.addEventListener('touchstart', trigger, false);
+  dom.score.innerHTML = 'Touch to<br />start.';
+  window.addEventListener('touchstart', trigger, false);
 } else {
-	window.addEventListener('keydown', keydown, false);
-	window.addEventListener('keyup', keyup, false);
+  window.addEventListener('keydown', keydown, false);
+  window.addEventListener('keyup', keyup, false);
 }
 
 },{"./dom":1,"./score":4,"./sounds":5,"./timer":6,"ismobilejs":8}],4:[function(require,module,exports){
@@ -159,13 +159,13 @@ var extensions = ['mp3', 'ogg', 'wav'];
 var sounds = {};
 
 names.forEach(function (name) {
-	var urls = extensions.map(function (ext) {
-		return name + '.' + ext;
-	});
+  var urls = extensions.map(function (ext) {
+    return name + '.' + ext;
+  });
 
-	sounds[name] = new Howl({
-		src: urls,
-	});
+  sounds[name] = new Howl({
+    src: urls
+  });
 });
 
 module.exports = sounds;

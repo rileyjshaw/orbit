@@ -1,4 +1,5 @@
-var isMobile = require('ismobilejs').any;
+var isMobileFn = require('ismobilejs').default || require('ismobilejs');
+var isMobile = isMobileFn().any;
 var dom = require('./dom');
 var timer = require('./timer');
 var score = require('./score');

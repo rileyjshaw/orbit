@@ -9,7 +9,7 @@ names.forEach(function (name) {
   });
 
   sounds[name] = new Howl({
-    urls: urls
+    src: urls
   });
 });
 
